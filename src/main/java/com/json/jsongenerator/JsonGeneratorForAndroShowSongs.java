@@ -11,11 +11,11 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 
 public class JsonGeneratorForAndroShowSongs 
@@ -52,10 +52,10 @@ public class JsonGeneratorForAndroShowSongs
         	contents[i] = contents[i].replace(".mp3", "");
         }
         
-        JSONArray jsonArr = new JSONArray();
+        JsonArray jsonArr = new JsonArray();
         for(int i = 0; i < contents.length; i++) {
             File mp3File = new File("D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\" + folderName + "\\" + contentsWithUnderscore.get(i));
-        	JSONObject jobj = new JSONObject();
+        	JsonObject jobj = new JsonObject();
         	String duration = "";
         	try {
     			duration = getDurationWithMp3Spi(mp3File);
@@ -64,10 +64,10 @@ public class JsonGeneratorForAndroShowSongs
     			e1.printStackTrace();
     		}
         	contents[i] = contents[i].replace("_", " ");
-        	jobj.put("TITLE", contents[i]);
-        	jobj.put("SINGER", contents[i]);
-        	jobj.put("DURATION", duration);
-        	jobj.put("URL", "https://divya0319.github.io/" + folderName + "/" + contentsWithUnderscore.get(i));
+        	jobj.addProperty("TITLE", contents[i]);
+        	jobj.addProperty("SINGER", contents[i]);
+        	jobj.addProperty("DURATION", duration);
+        	jobj.addProperty("URL", "https://divya0319.github.io/" + folderName + "/" + contentsWithUnderscore.get(i));
         	jsonArr.add(jobj);
         }
         
@@ -75,7 +75,7 @@ public class JsonGeneratorForAndroShowSongs
         String indented = "";
         try {
 			FileWriter file = new FileWriter("D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\apis\\" + jsonFileName + ".json");
-			String jsonStr = jsonArr.toJSONString();
+			String jsonStr = jsonArr.toString();
 			jsonStr = jsonStr.replace("\\","");
 			ObjectMapper mapper = new ObjectMapper();
 			Object json = mapper.readValue(jsonStr, Object.class);

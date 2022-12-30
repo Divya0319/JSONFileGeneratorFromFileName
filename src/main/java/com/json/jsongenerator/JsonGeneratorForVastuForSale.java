@@ -9,18 +9,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class JsonGeneratorForVastuForSale {
 	static String sourceFileName = "for_sale_data.csv";
 	static String jsonFileName = "forSaleData";
 	static String folderName = "forSale";
-	
+
 	static String txtFilepath = "D:\\Personal Projects\\Androshow Github pages API\\" + sourceFileName;
 
 	public static void main(String[] args) {
@@ -38,43 +39,47 @@ public class JsonGeneratorForVastuForSale {
 
 		List<ForSaleData> forSaleDatas = readDataFromCsv(txtFilepath);
 
-		JSONArray jsonArr = new JSONArray();
+		JsonArray jsonArr = new JsonArray();
 		for (int i = 0; i < forSaleDatas.size(); i++) {
-			JSONObject jobj = new JSONObject();
-			jobj.put("title", forSaleDatas.get(i).getTitle());
-			jobj.put("description", forSaleDatas.get(i).getDescription());
-			jobj.put("size", forSaleDatas.get(i).getSize());
-			jobj.put("rate", forSaleDatas.get(i).getRate());
-			jobj.put("bestFor", forSaleDatas.get(i).getBestFor());
-			jobj.put("latitude", forSaleDatas.get(i).getLatitude());
-			jobj.put("longitude", forSaleDatas.get(i).getLongitude());
-			jobj.put("youtubeVideoId", forSaleDatas.get(i).getYoutubeVideoId());
+			JsonObject jobj = new JsonObject();
+			jobj.addProperty("title", forSaleDatas.get(i).getTitle());
+			jobj.addProperty("description", forSaleDatas.get(i).getDescription());
+			jobj.addProperty("size", forSaleDatas.get(i).getSize());
+			jobj.addProperty("rate", forSaleDatas.get(i).getRate());
+			jobj.addProperty("bestFor", forSaleDatas.get(i).getBestFor());
+			jobj.addProperty("latitude", forSaleDatas.get(i).getLatitude());
+			jobj.addProperty("longitude", forSaleDatas.get(i).getLongitude());
+			jobj.addProperty("youtubeVideoId", forSaleDatas.get(i).getYoutubeVideoId());
 
-			for (int j = 0; j < folders.length; j++) {
-				
-				if(jobj.containsKey("urls")) {
-					JSONArray jarr = (JSONArray) jobj.get("urls");
-					if(jarr.size() == forSaleDatas.size()) {
-						break;
-					}
-				}
-				
-				String path = "D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\" + folderName
-						+ "\\" + folders[j];
-				File images = new File(path);
-				String[] imagesNames = images.list();
-				JSONArray listOfImagesInThatFolder = new JSONArray();
-				for (int k = 0; k < imagesNames.length; k++) {
-					listOfImagesInThatFolder.add("https://divya0319.github.io/" + folderName + "/" +  folders[j] + "/" +  imagesNames[k]);
-				}
-				jobj.put("imageUrls", listOfImagesInThatFolder);
-				
-
-			}
-			
 			jsonArr.add(jobj);
-			
-			
+
+		}
+
+		List<List<String>> imageUrls = new ArrayList<List<String>>();
+
+		for (int j = 0; j < folders.length; j++) {
+
+			String path = "D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\" + folderName + "\\"
+					+ folders[j];
+			String onlinePath = "https://divya0319.github.io/" + folderName + "/" + folders[j];
+			File images = new File(path);
+			String[] imagesNames = images.list();
+
+			for (int k = 0; k < imagesNames.length; k++) {
+				imagesNames[k] = onlinePath + "/" + imagesNames[k];
+			}
+			List<String> imageNamesArray = Arrays.asList(imagesNames);
+			imageUrls.add(imageNamesArray);
+
+		}
+
+		for (int i = 0; i < jsonArr.size(); i++) {
+			JsonObject jobj = (JsonObject) jsonArr.get(i);
+
+			Gson gson = new Gson();
+			JsonArray imageUrlsIndividual = gson.toJsonTree(imageUrls.get(i)).getAsJsonArray();
+			jobj.add("urls", imageUrlsIndividual);
+
 		}
 
 		String indented = "";
@@ -82,7 +87,7 @@ public class JsonGeneratorForVastuForSale {
 			FileWriter file = new FileWriter(
 					"D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\apis\\" + jsonFileName
 							+ ".json");
-			String jsonStr = jsonArr.toJSONString();
+			String jsonStr = jsonArr.toString();
 			ObjectMapper mapper = new ObjectMapper();
 			Object json = mapper.readValue(jsonStr, Object.class);
 			indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);

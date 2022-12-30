@@ -6,10 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 
 public class JsonGeneratorForAndroShowWalls 
@@ -45,13 +44,13 @@ public class JsonGeneratorForAndroShowWalls
 			
         }
         
-        JSONArray jsonArr = new JSONArray();
+        JsonArray jsonArr = new JsonArray();
         for(int i = 0; i < contents.length; i++) {
         	System.out.println(contents[i]);
-        	JSONObject jobj = new JSONObject();
+        	JsonObject jobj = new JsonObject();
 			contents[i] = contents[i].replace("_", " ");
-        	jobj.put("TITLE", contents[i]);
-        	jobj.put("URL", "https://divya0319.github.io/" + folderName + "/" + contentsWithUnderscore.get(i));
+        	jobj.addProperty("TITLE", contents[i]);
+        	jobj.addProperty("URL", "https://divya0319.github.io/" + folderName + "/" + contentsWithUnderscore.get(i));
         	jsonArr.add(jobj);
         }
         
@@ -59,7 +58,7 @@ public class JsonGeneratorForAndroShowWalls
         
         try {
 			FileWriter file = new FileWriter("D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\apis\\" + jsonFileName + ".json");
-			String jsonStr = jsonArr.toJSONString();
+			String jsonStr = jsonArr.toString();
 			jsonStr = jsonStr.replace("\\","");
 			ObjectMapper mapper = new ObjectMapper();
 			Object json = mapper.readValue(jsonStr, Object.class);

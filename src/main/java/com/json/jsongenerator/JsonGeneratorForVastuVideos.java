@@ -1,7 +1,6 @@
 package com.json.jsongenerator;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,14 +8,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class JsonGeneratorForVastuVideos {
 	static String sourceFileName = "vastu_video_links.txt";
@@ -28,12 +24,12 @@ public class JsonGeneratorForVastuVideos {
 
 		List<Video> videos = readVideosFromCsv(txtFilepath);
 		
-		JSONArray jsonArr = new JSONArray();
+		JsonArray jsonArr = new JsonArray();
 		for (int i = 0; i < videos.size(); i++) {
-			JSONObject jobj = new JSONObject();
-			jobj.put("title", videos.get(i).getTitle());
-			jobj.put("vidId", videos.get(i).getVidId());
-			jobj.put("url", videos.get(i).getUrl());
+			JsonObject jobj = new JsonObject();
+			jobj.addProperty("title", videos.get(i).getTitle());
+			jobj.addProperty("vidId", videos.get(i).getVidId());
+			jobj.addProperty("url", videos.get(i).getUrl());
 			jsonArr.add(jobj);
 		}
 
@@ -42,7 +38,7 @@ public class JsonGeneratorForVastuVideos {
 			FileWriter file = new FileWriter(
 					"D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\apis\\" +  jsonFileName
 							+ ".json");
-			String jsonStr = jsonArr.toJSONString();
+			String jsonStr = jsonArr.toString();
 			jsonStr = jsonStr.replace("\\", "");
 			ObjectMapper mapper = new ObjectMapper();
 			Object json = mapper.readValue(jsonStr, Object.class);

@@ -13,10 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class JsonGeneratorForVastu {
 	static String folderName = "floorPlans";
@@ -44,14 +43,14 @@ public class JsonGeneratorForVastu {
 		coll = coll.stream().map(Integer::valueOf).sorted().map(String::valueOf).collect(Collectors.toList());
 		System.out.println(coll.toString());
 		
-		JSONArray jsonArr = new JSONArray();
+		JsonArray jsonArr = new JsonArray();
 		for (int i = 0; i < coll.size(); i++) {
-			JSONObject jobj = new JSONObject();
-			jobj.put("title", title);
-			jobj.put("url", "https://divya0319.github.io/" + folderName + "/" + coll.get(i) + ".jpg");
-			jobj.put("plotArea", areas.get(i).getPlotArea());
-			jobj.put("buildUpArea", areas.get(i).getBuildupArea());
-			jobj.put("facing", areas.get(i).getFacing());
+			JsonObject jobj = new JsonObject();
+			jobj.addProperty("title", title);
+			jobj.addProperty("url", "https://divya0319.github.io/" + folderName + "/" + coll.get(i) + ".jpg");
+			jobj.addProperty("plotArea", areas.get(i).getPlotArea());
+			jobj.addProperty("buildUpArea", areas.get(i).getBuildupArea());
+			jobj.addProperty("facing", areas.get(i).getFacing());
 			jsonArr.add(jobj);
 		}
 
@@ -60,7 +59,7 @@ public class JsonGeneratorForVastu {
 			FileWriter file = new FileWriter(
 					"D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\apis\\" +  jsonFileName
 							+ ".json");
-			String jsonStr = jsonArr.toJSONString();
+			String jsonStr = jsonArr.toString();
 			jsonStr = jsonStr.replace("\\", "");
 			ObjectMapper mapper = new ObjectMapper();
 			Object json = mapper.readValue(jsonStr, Object.class);
