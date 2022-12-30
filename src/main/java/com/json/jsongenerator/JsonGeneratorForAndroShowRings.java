@@ -13,7 +13,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.tritonus.share.sampled.file.TAudioFileFormat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -74,11 +75,8 @@ public class JsonGeneratorForAndroShowRings
         String indented = "";
         try {
 			FileWriter file = new FileWriter("D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\apis\\" + jsonFileName + ".json");
-			String jsonStr = jsonArr.toString();
-			jsonStr = jsonStr.replace("\\","");
-			ObjectMapper mapper = new ObjectMapper();
-			Object json = mapper.readValue(jsonStr, Object.class);
-			indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			indented = gson.toJson(jsonArr);
 			file.write(indented);
 			file.close();
 		} catch (IOException e) {

@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -77,8 +77,8 @@ public class JsonGeneratorForVastuForSale {
 			JsonObject jobj = (JsonObject) jsonArr.get(i);
 
 			Gson gson = new Gson();
-			JsonArray imageUrlsIndividual = gson.toJsonTree(imageUrls.get(i)).getAsJsonArray();
-			jobj.add("urls", imageUrlsIndividual);
+			JsonArray imageUrlsforIndividualProperty = gson.toJsonTree(imageUrls.get(i)).getAsJsonArray();
+			jobj.add("imageUrls", imageUrlsforIndividualProperty);
 
 		}
 
@@ -87,10 +87,8 @@ public class JsonGeneratorForVastuForSale {
 			FileWriter file = new FileWriter(
 					"D:\\Personal Projects\\Androshow Github pages API\\divya0319.github.io\\apis\\" + jsonFileName
 							+ ".json");
-			String jsonStr = jsonArr.toString();
-			ObjectMapper mapper = new ObjectMapper();
-			Object json = mapper.readValue(jsonStr, Object.class);
-			indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			indented = gson.toJson(jsonArr);
 			file.write(indented);
 			file.close();
 		} catch (IOException e) {
