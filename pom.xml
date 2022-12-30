@@ -52,7 +52,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.json.jsongenerator.JsonGeneratorForAndroShowWalls</mainClass>
+							<mainClass>com.json.jsongenerator.JsonGeneratorForVastuForSale</mainClass>
 						</manifest>
 					</archive>
 					<source>1.8</source>
@@ -87,7 +87,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.json.jsongenerator.JsonGeneratorForAndroShowWalls</mainClass>
+							<mainClass>com.json.jsongenerator.JsonGeneratorForVastuForSale</mainClass>
 						</manifest>
 					</archive>
 					<source>1.8</source>

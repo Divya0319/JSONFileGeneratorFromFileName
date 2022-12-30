@@ -8,9 +8,10 @@ public class ForSaleData {
 	String bestFor;
 	String latitude;
 	String longitude;
+	String youtubeVideoId;
 	
 	public ForSaleData(String title, String description, String size, String rate, String bestFor, String latitude,
-			String longitude) {
+			String longitude, String youtubeVideoId) {
 		this.title = title;
 		this.description = description;
 		this.size = size;
@@ -18,6 +19,7 @@ public class ForSaleData {
 		this.bestFor = bestFor;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.youtubeVideoId = youtubeVideoId;
 	}
 
 	public String getTitle() {
@@ -47,9 +49,10 @@ public class ForSaleData {
 	public String getLongitude() {
 		return longitude;
 	}
-	
-	
-	
+
+	public String getYoutubeVideoId() {
+		return youtubeVideoId;
+	}
 	
 
 }

@@ -17,7 +17,7 @@ import org.json.simple.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonGeneratorForVastuForSale {
-	static String sourceFileName = "for_sale_data.txt";
+	static String sourceFileName = "for_sale_data.csv";
 	static String jsonFileName = "forSaleData";
 	static String folderName = "forSale";
 	
@@ -36,7 +36,7 @@ public class JsonGeneratorForVastuForSale {
 			System.out.println(folders[i]);
 		}
 
-		List<ForSaleData> forSaleDatas = readDataFromTxt(txtFilepath);
+		List<ForSaleData> forSaleDatas = readDataFromCsv(txtFilepath);
 
 		JSONArray jsonArr = new JSONArray();
 		for (int i = 0; i < forSaleDatas.size(); i++) {
@@ -48,6 +48,7 @@ public class JsonGeneratorForVastuForSale {
 			jobj.put("bestFor", forSaleDatas.get(i).getBestFor());
 			jobj.put("latitude", forSaleDatas.get(i).getLatitude());
 			jobj.put("longitude", forSaleDatas.get(i).getLongitude());
+			jobj.put("youtubeVideoId", forSaleDatas.get(i).getYoutubeVideoId());
 
 			for (int j = 0; j < folders.length; j++) {
 				
@@ -66,7 +67,7 @@ public class JsonGeneratorForVastuForSale {
 				for (int k = 0; k < imagesNames.length; k++) {
 					listOfImagesInThatFolder.add("https://divya0319.github.io/" + folderName + "/" +  folders[j] + "/" +  imagesNames[k]);
 				}
-				jobj.put("urls", listOfImagesInThatFolder);
+				jobj.put("imageUrls", listOfImagesInThatFolder);
 				
 
 			}
@@ -95,11 +96,12 @@ public class JsonGeneratorForVastuForSale {
 		System.out.println("JSON file created: " + indented);
 	}
 
-	private static List<ForSaleData> readDataFromTxt(String fileName) {
+	private static List<ForSaleData> readDataFromCsv(String fileName) {
 		List<ForSaleData> forSaleDatas = new ArrayList<>();
 		Path path = Paths.get(txtFilepath);
 		try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
 			String line = br.readLine();
+			line = br.readLine();
 			while (line != null) {
 				String[] attributes = line.split(",");
 				ForSaleData forSaleData = createForSaleObj(attributes);
@@ -123,8 +125,9 @@ public class JsonGeneratorForVastuForSale {
 		String bestFor = metadata[4];
 		String latitude = metadata[5];
 		String longitude = metadata[6];
+		String youtubeVideoId = metadata[7];
 
-		return new ForSaleData(title, description, size, rate, bestFor, latitude, longitude);
+		return new ForSaleData(title, description, size, rate, bestFor, latitude, longitude, youtubeVideoId);
 
 	}
 
