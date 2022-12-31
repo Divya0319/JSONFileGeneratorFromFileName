@@ -37,25 +37,21 @@ public class JsonGeneratorForVastuForSale {
 			System.out.println(folders[i]);
 		}
 
-		List<ForSaleData> forSaleDatas = readDataFromCsv(txtFilepath);
+		List<ForSaleDataForPropertyList> forSaleDatas = readDataFromCsv(txtFilepath);
 
 		JsonArray jsonArr = new JsonArray();
 		for (int i = 0; i < forSaleDatas.size(); i++) {
 			JsonObject jobj = new JsonObject();
 			jobj.addProperty("title", forSaleDatas.get(i).getTitle());
 			jobj.addProperty("description", forSaleDatas.get(i).getDescription());
-			jobj.addProperty("size", forSaleDatas.get(i).getSize());
-			jobj.addProperty("rate", forSaleDatas.get(i).getRate());
-			jobj.addProperty("bestFor", forSaleDatas.get(i).getBestFor());
-			jobj.addProperty("latitude", forSaleDatas.get(i).getLatitude());
-			jobj.addProperty("longitude", forSaleDatas.get(i).getLongitude());
-			jobj.addProperty("youtubeVideoId", forSaleDatas.get(i).getYoutubeVideoId());
 
 			jsonArr.add(jobj);
 
 		}
 
-		List<List<String>> imageUrls = new ArrayList<List<String>>();
+		List<String> imageUrls = new ArrayList<String>();
+
+		// this loop creates an array of all image urls
 
 		for (int j = 0; j < folders.length; j++) {
 
@@ -63,22 +59,27 @@ public class JsonGeneratorForVastuForSale {
 					+ folders[j];
 			String onlinePath = "https://divya0319.github.io/" + folderName + "/" + folders[j];
 			File images = new File(path);
-			String[] imagesNames = images.list();
+			String fileName = images.list()[0];
 
-			for (int k = 0; k < imagesNames.length; k++) {
-				imagesNames[k] = onlinePath + "/" + imagesNames[k];
+			int index = fileName.lastIndexOf(".");
+
+			if (index > 0) {
+				String extension = fileName.substring(index + 1);
+				if (extension.equals("jpeg") || extension.equals("jpg")) {
+
+					fileName = onlinePath + "/" + fileName;
+
+				}
 			}
-			List<String> imageNamesArray = Arrays.asList(imagesNames);
-			imageUrls.add(imageNamesArray);
+
+			imageUrls.add(fileName);
 
 		}
 
 		for (int i = 0; i < jsonArr.size(); i++) {
 			JsonObject jobj = (JsonObject) jsonArr.get(i);
 
-			Gson gson = new Gson();
-			JsonArray imageUrlsforIndividualProperty = gson.toJsonTree(imageUrls.get(i)).getAsJsonArray();
-			jobj.add("imageUrls", imageUrlsforIndividualProperty);
+			jobj.addProperty("mainImageUrl", imageUrls.get(i));
 
 		}
 
@@ -99,15 +100,15 @@ public class JsonGeneratorForVastuForSale {
 		System.out.println("JSON file created: " + indented);
 	}
 
-	private static List<ForSaleData> readDataFromCsv(String fileName) {
-		List<ForSaleData> forSaleDatas = new ArrayList<>();
+	private static List<ForSaleDataForPropertyList> readDataFromCsv(String fileName) {
+		List<ForSaleDataForPropertyList> forSaleDatas = new ArrayList<>();
 		Path path = Paths.get(txtFilepath);
 		try (BufferedReader br = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
 			String line = br.readLine();
 			line = br.readLine();
 			while (line != null) {
 				String[] attributes = line.split(",");
-				ForSaleData forSaleData = createForSaleObj(attributes);
+				ForSaleDataForPropertyList forSaleData = createForSaleObj(attributes);
 
 				forSaleDatas.add(forSaleData);
 
@@ -120,17 +121,11 @@ public class JsonGeneratorForVastuForSale {
 		return forSaleDatas;
 	}
 
-	private static ForSaleData createForSaleObj(String[] metadata) {
+	private static ForSaleDataForPropertyList createForSaleObj(String[] metadata) {
 		String title = metadata[0];
 		String description = metadata[1];
-		String size = metadata[2];
-		String rate = metadata[3];
-		String bestFor = metadata[4];
-		String latitude = metadata[5];
-		String longitude = metadata[6];
-		String youtubeVideoId = metadata[7];
 
-		return new ForSaleData(title, description, size, rate, bestFor, latitude, longitude, youtubeVideoId);
+		return new ForSaleDataForPropertyList(title, description);
 
 	}
 

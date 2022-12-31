@@ -21,6 +21,10 @@ public class ForSaleData {
 		this.longitude = longitude;
 		this.youtubeVideoId = youtubeVideoId;
 	}
+	
+	public ForSaleData() {
+		
+	}
 
 	public String getTitle() {
 		return title;
